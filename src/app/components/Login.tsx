@@ -1,61 +1,59 @@
 'use client'
 import { useState } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Login() {
-  const { data: session, status } = useSession()
-
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
-  const handleSubmit = async (e) => {
+  const { data: session, status } = useSession();
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch('/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(
-          { 
-              login, 
-              password 
-          }
-      ),
-    })
-    const data = await res.json();
-    if (res.ok) {
-      window.location.href = '/signin/result';
+    const result = await signIn('credentials', {
+      redirect: false,
+      login,
+      password,
+      callbackUrl: 'http://localhost:3000/signin/result',
+    });
+    if (result?.ok && result.url) {
+      window.location.href = result.url;
     } else {
+      setError('Невірний логін або пароль');
       setLogin('');
       setPassword('');
     }
-  }
+  };
   if (!session) {
     return (
       <div>
         <p>Ви не увійшли в систему</p>
         <form onSubmit={handleSubmit}>
-<div>
-    <input id="login" type="text" name="login" placeholder="Enter login" value={login} onChange={(e) => setLogin(e.target.value)}/>
-    </div>
-    <div>
-    <input id="password" type="password" name="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-    </div>
-    <div>
-    <input type="submit" id="register" value="Увійти"/>
-</div>
-    <div>
-      <p>Або</p>
-    </div>
-        <button onClick={() => signIn()}>Увійти через Google</button>
+          <div>
+            <input id="login" type="text" name="login" placeholder="Email або логін" value={login} onChange={(e) => setLogin(e.target.value)} required
+            />
+          </div>
+          <div>
+            <input id="password" type="password" name="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)} required
+            />
+          </div>
+          <div>
+            <input type="submit" value="Увійти" />
+          </div>
         </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div>
+          <p>Або</p>
+          <button onClick={() => signIn('google', { callbackUrl: '/signin/result' })}>
+            Увійти через Google
+          </button>
+          <button onClick={() => signIn('github', { callbackUrl: '/signin/result' })}>
+            Увійти через GitHub
+          </button>
+        </div>
       </div>
-    )
+    );
   }
-
-  return (
-    <div>
-      <p>Ви увійшли як {session.user?.email}</p>
-      <button onClick={() => signOut()}>Вийти</button>
-    </div>
-  )
+  return 
 }
+
+
