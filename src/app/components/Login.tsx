@@ -26,7 +26,7 @@ export default function Login() {
   if (!session) {
     return (
       <div>
-        <p>Ви не увійшли в систему</p>
+        <h1>Ви не увійшли в систему</h1>
         <form onSubmit={handleSubmit}>
           <div>
             <input id="login" type="text" name="login" placeholder="Email або логін" value={login} onChange={(e) => setLogin(e.target.value)} required
@@ -55,5 +55,4 @@ export default function Login() {
   }
   return 
 }
-
 
