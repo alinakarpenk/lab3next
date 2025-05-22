@@ -8,7 +8,7 @@ dotenv.config()
 
 
 
-export const authOptions = {
+const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
