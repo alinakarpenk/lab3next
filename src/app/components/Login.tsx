@@ -53,6 +53,12 @@ export default function Login() {
       </div>
     );
   }
-  return 
+  return (
+    <div>
+            <p>Email: {session.user?.email}</p>
+            <p>Name: {session.user?.name}</p>
+            <button onClick={() => signOut()}>Вийти</button>
+          </div>
+  )
 }
 
