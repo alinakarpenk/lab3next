@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Login from '../components/Login'; // Шлях до компонента
+import Login from '../components/Login';
 import '@testing-library/jest-dom';
 import { SessionProvider } from 'next-auth/react'
 
@@ -53,8 +53,6 @@ describe('Login', () => {
         <Login />
       </SessionProvider>
     )
-
-    // Update the queries to match the exact text content of the buttons
     const googleButton = screen.getByRole('button', { name: /Увійти через Google/i })
     const githubButton = screen.getByRole('button', { name: /Увійти через GitHub/i })
 
